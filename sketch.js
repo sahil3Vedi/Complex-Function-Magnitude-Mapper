@@ -19,9 +19,12 @@ function complex(x,y){
   }
 }
 
-var mode=0;
+var mode=1;
 var i;
 var j;
+
+var z;
+var maxz=0;
 
 //working
 
@@ -30,26 +33,38 @@ function setup() {
 }
 
 function draw() {
-  //setting up
-  stroke(255);
-  translate(windowWidth/2,windowHeight/2);
   background(0);
-  line(-windowWidth/2,0,windowWidth/2,0);
-  line(0,-windowHeight/2,0,windowHeight/2);
-
+  translate(windowWidth/2,windowHeight/2);
     //working
 
     rotate(PI/2);
-    stroke(200,250,100);
 
     //if w=z
     if(mode==1){
-
+      // for(i=-windowWidth/2;i<windowWidth/2;i=i+100){
+      //   for(j=-windowWidth/2;j<windowWidth/2;j=j+100){
+      //     z=new complex(i,j);
+      //     if (z.mag()>maxz){
+      //       maxz=z.mag();
+      //     }
+      //     let hue=Math.floor(map(z.mag(),0,maxz,0,255));
+      //     stroke(hue,255-hue,0);
+      //     point(i,j);
+      //   }
+      // }
+      for(i=-windowWidth/2;i<windowWidth/2;i=i+10){
+        for(j=-windowWidth/2;j<windowWidth/2;j=j+10){
+          z=new complex(i,j);
+          if (z.mag()>maxz){
+            maxz=z.mag();
+          }
+          let hue=Math.floor(map(z.mag(),0,maxz,0,255));
+          stroke(hue,255-hue,0);
+          point(i,j);
+        }
+      }
     }
     //initially w=z
-    //u=x,v=y
-    //color tan function something continue here Sahil bbye :)
-
 
 
 
