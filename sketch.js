@@ -1,27 +1,18 @@
-//defining scrollers
-function bar(min,max,x,y,len){
-  this.x=x;
-  this.y=y;
-  this.len=len;
-  this.min=min;
-  this.max=max;
-  this.show=function(){
-    rect(x,y,len,20);
-  }
-}
+//defining sliders
+var resolutionSlider;
+var xmaxSlider;
+var xminSlider;
+var ymaxSlider;
+var yminSlider;
 
-function scroller(bar,min,max,fac){
-  this.min=min;
-  this.max=max;
-  this.x=bar.x+(bar.len*fac);
-  this.y=bar.y;
-  this.value=5;
-  this.show=function(){
-    this.x=constrain(this.x,bar.x,bar.x+bar.len);
-    line(this.x,this.y,this.x,this.y+20);
-    this.value=Math.floor(map(this.x,bar.x,bar.x+bar.len,this.min,this.max));
-  }
-}
+var aSlider;
+var bSlider;
+var cSlider;
+
+var tSlider;
+
+//defining canvas;
+var complexCanvas;
 
 
 //defiing complex numbers
@@ -48,95 +39,68 @@ var mode=1;
 var i;
 var j;
 
-var ResolutionB;
-var ResolutionS;
-var MinXB;
-var MinXS;
-var MaxXB;
-var MaxXS;
-var MinYB;
-var MinYS;
-var MaxYB;
-var MaxYS;
-
 var res;
 var minX;
 var maxX;
 var minY;
 var maxY;
+var minXX;
+var maxXX;
+var minYY;
+var maxYY;
 
 
 
 //working
 
 function setup() {
-  createCanvas(windowWidth,windowHeight);
-  ResolutionB = new bar(1,10,-600,-300,100);
-  ResolutionS = new scroller(ResolutionB,1,10,0.5);
-  res=int(ResolutionS.value);
-  MinXB = new bar(-windowHeight/2,windowHeight/2,-600,-250,100);
-  MinXS = new scroller(MinXB,-windowHeight/2,windowHeight/2,0.25);
-  minX=int(MinXS.value);
-  MaxXB = new bar(-windowHeight/2,windowHeight/2,-600,-200,100);
-  MaxXS = new scroller(MaxXB,-windowHeight/2,windowHeight/2,0.75);
-  maxX=int(MaxXS.value);
-  MinYB = new bar(-windowWidth/2,windowWidth/2,-600,-150,100);
-  MinYS = new scroller(MinYB,-windowWidth/2,windowWidth/2,0.25);
-  minY=int(MinYS.value);
-  MaxYB = new bar(-windowWidth/2,windowWidth/2,-600,-100,100);
-  MaxYS = new scroller(MaxYB,-windowWidth/2,windowWidth/2,0.75);
-  maxY=int(MaxYS.value);
+  complexCanvas=createCanvas(windowWidth,windowHeight);
+  complexCanvas.style('top','auto');
+  complexCanvas.style('z-index','-1000');
+  complexCanvas.style('position','fixed');
+  complexCanvas.style('bottom','0px');
+  resolutionSlider = createSlider(1,10,50);
+  xmaxSlider = createSlider(-windowWidth/4,windowWidth/4,50);
+  xminSlider = createSlider(-windowWidth/4,windowWidth/4,50);
+  ymaxSlider = createSlider(-windowWidth/4,windowWidth/4,50);
+  yminSlider = createSlider(-windowWidth/4,windowWidth/4,50);
+  aSlider = createSlider(-10,10,50);
+  bSlider = createSlider(-10,10,50);
+  cSlider = createSlider(-10,10,50);
+  tSlider = createSlider(0,1,50);
+  resolutionSlider.position(50,20);
+  xmaxSlider.position(50,70);
+  xminSlider.position(50,120);
+  ymaxSlider.position(50,170);
+  yminSlider.position(50,220);
+  aSlider.position(windowWidth-200,70);
+  bSlider.position(windowWidth-200,120);
+  cSlider.position(windowWidth-200,170);
+  tSlider.position(windowWidth-200,220);
 }
-
-function keyPressed() {
-  if (key == 'E' || key == 'e') {
-    ResolutionS.x+=2;
-    res=int(ResolutionS.value);
-  } else if (key == 'Q' || key == 'q') {
-    ResolutionS.x-=2;
-    res=int(ResolutionS.value);
-  } else if (key == 'W' || key == 'w') {
-    MinXS.x-=1;
-    minX=int(MinXS.value);
-  } else if (key == 'S' || key == 's') {
-    MinXS.x+=1;
-    minX=int(MinXS.value);
-  } else if (key == 'I' || key == 'i') {
-    MaxXS.x-=1;
-    maxX=int(MaxXS.value);
-  } else if (key == 'K' || key == 'k') {
-    MaxXS.x+=1;
-    maxX=int(MaxXS.value);
-  } else if (key == 'L' || key == 'l') {
-    MinYS.x-=1;
-    minY=int(MinYS.value);
-  } else if (key == 'J' || key == 'j') {
-    MinYS.x+=1;
-    minY=int(MinYS.value);
-  } else if (key == 'D' || key == 'd') {
-    MaxYS.x-=1;
-    maxY=int(MaxYS.value);
-  } else if (key == 'A' || key == 'a') {
-    MaxYS.x+=1;
-    maxY=int(MaxYS.value);
-  }
-  return false; // prevent default
-}
-
 
 function draw(){
   background(0);
+  res=resolutionSlider.value();
+  minX=xminSlider.value()-windowWidth/4;
+  maxX=xmaxSlider.value()-windowWidth/4;
+  minY=yminSlider.value();
+  maxY=ymaxSlider.value();
+  minXX=xminSlider.value()+windowWidth/4;
+  maxXX=xmaxSlider.value()+windowWidth/4;
+  minYY=yminSlider.value();
+  maxYY=ymaxSlider.value();
   translate(windowWidth/2,windowHeight/2);
     //working
 
-    rotate(PI/2);
+    //rotate(PI/2);
 
-    //if w=z
-    if(mode==1){
+    //w=z
+    if(tSlider.value()!=0){
       let maxz=0;
       for(i=minX;i<maxX;i+=res){
         for(j=minY;j<maxY;j+=res){
-          let z=new complex(i,j);
+          let z=new complex(i+windowWidth/4,j);
           let m=z.mag();
           if(m>maxz){
             maxz=m;
@@ -148,47 +112,34 @@ function draw(){
       }
     }
 
-    //if w=z*z-2z+1
-    if(mode==2){
-      for(i=-50;i<50;i=i+1){
-        for(j=-50;j<50;j=j+1){
-          let k=new complex(i,j);
-          let p=new complex(40,0);
-          let q=k.mult(p);
-          let z=k.add(q);
-          if (z.mag()>maxz){
-            maxz=z.mag();
-          }
-          let hue=Math.floor(map(z.mag(),0,maxz,0,255));
-          stroke(255-hue,hue,0);
-          point(i,j);
+    //w=f(z)
+    let maxzz=0;
+    for(i=minXX;i<maxXX;i+=res){
+      for(j=minYY;j<maxYY;j+=res){
+        let z=new complex(i-windowWidth/4,j);
+        let a=new complex(aSlider.value()/100,0);
+        let b=new complex(bSlider.value(),0);
+        let c=new complex(cSlider.value(),0);
+        let zsq=z.mult(z);
+        let z1=a.mult(zsq);
+        let z2=b.mult(z);
+        let z3=z1.add(z2);
+        let z4=z3.add(c);
+        let m=z4.mag();
+        if(m>maxzz){
+          maxzz=m;
         }
+        let hue=Math.floor(map(m,0,maxzz,0,255));
+        stroke(255-hue,hue,0);
+        point(i,j);
       }
     }
-
-
-
-
-
-
-
 
   //displaying frameRate
   stroke(255);
   noFill();
-  rotate(-PI/2);
-  text('FrameRate: '+ Math.floor(frameRate()), 500, -270);
-  text('type W-A-L-K to get started',500,-300);
-  text('Q',-620,-285);
-  text('E - Resolution',-490,-285);
-  text('W',-620,-235);
-  text('S - Ymax',-490,-235);
-  text('I',-615,-185);
-  text('K - Ymin',-490,-185);
-  text('L',-620,-135);
-  text('J - Xmax',-490,-135);
-  text('D',-620,-85);
-  text('A - Xmin',-490,-85);
+  text('FrameRate: '+ Math.floor(frameRate()), 500, 270);
+  text((aSlider.value()/100)+'z*z+'+bSlider.value()+'z+'+cSlider.value(), 500, -280);
   //labelling graphs50
   for(i=-windowWidth/2;i<windowWidth/2;i++){
     if(i%50==0){
@@ -200,15 +151,9 @@ function draw(){
       text(j,0,j);
     }
   }
-  ResolutionB.show();
-  ResolutionS.show();
-  MinXB.show();
-  MinXS.show();
-  MaxXB.show();
-  MaxXS.show();
-  MinYB.show();
-  MinYS.show();
-  MaxYB.show();
-  MaxYS.show();
+  line(0,-windowHeight/2,0,windowHeight/2);
+  line(-windowWidth/4,-windowHeight/2,-windowWidth/4,windowHeight/2);
+  line(windowWidth/4,-windowHeight/2,windowWidth/4,windowHeight/2);
+  line(-windowWidth/2,0,windowWidth/2,0);
 
 }
