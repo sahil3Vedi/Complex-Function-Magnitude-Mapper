@@ -35,7 +35,7 @@ function complex(x,y){
   }
 }
 
-var mode=1;
+
 var i;
 var j;
 
@@ -77,6 +77,7 @@ function setup() {
   bSlider.position(windowWidth-200,120);
   cSlider.position(windowWidth-200,170);
   tSlider.position(windowWidth-200,220);
+
 }
 
 function draw(){
@@ -140,15 +141,30 @@ function draw(){
   noFill();
   text('FrameRate: '+ Math.floor(frameRate()), 500, 270);
   text((aSlider.value()/100)+'z*z+'+bSlider.value()+'z+'+cSlider.value(), 500, -280);
+  text("Coeff z*z", 426, -246);
+  text("Coeff z", 436, -196);
+  text("Constant", 426, -146);
+  text("Toggle w = z", 410, -96);
+  text("Spacing", -497, -296);
+  text("max X", -497, -246);
+  text("min X", -497, -196);
+  text("max Y", -497, -146);
+  text("min Y", -497, -96);
   //labelling graphs50
-  for(i=-windowWidth/2;i<windowWidth/2;i++){
-    if(i%50==0){
-      text(i,i,0);
+  var t = Math.floor(windowWidth/2);
+  for(i=-t;i<0;i++){
+    if(Math.floor(i+windowWidth/4)%50==0){
+      text(Math.floor(i+windowWidth/4),i,0);
     }
   }
-  for(j=-windowWidth/2;j<windowWidth/2;j++){
+  for(i=0;i<t;i++){
+    if(Math.floor(i-windowWidth/4)%50==0){
+      text(Math.floor(i-windowWidth/4),i,0);
+    }
+  }
+  for(j=windowHeight/2;j>-windowHeight/2;j-=1){
     if(j%50==0){
-      text(j,0,j);
+      text(-j + " j",0,j);
     }
   }
   line(0,-windowHeight/2,0,windowHeight/2);
